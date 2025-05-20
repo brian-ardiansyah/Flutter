@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'home_page.dart'; // Pastikan file ini ada
+import 'prediction_page.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -7,6 +7,7 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(title: const Text('CekParu'), centerTitle: true),
       bottomNavigationBar: _buildBottomNav(0, context),
       body: Padding(
         padding: const EdgeInsets.all(20),
@@ -15,7 +16,7 @@ class HomePage extends StatelessWidget {
           children: [
             const SizedBox(height: 40),
             const Text(
-              "Hi Rawls!",
+              "Hi!",
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
             const Text("May you always be in a good condition"),
@@ -47,21 +48,20 @@ class HomePage extends StatelessWidget {
             Row(
               children: [
                 Expanded(
-                  child: Column(
-                    children: const [
-                      Icon(Icons.analytics, size: 40),
-                      SizedBox(height: 8),
-                      Text("Prediction"),
-                    ],
+                  child: _buildFeatureCard(
+                    icon: Icons.analytics,
+                    title: "Prediction",
+                    onTap: () => Navigator.pushNamed(context, '/prediction'),
                   ),
                 ),
+                const SizedBox(width: 16),
                 Expanded(
-                  child: Column(
-                    children: const [
-                      Icon(Icons.menu_book, size: 40),
-                      SizedBox(height: 8),
-                      Text("Learn"),
-                    ],
+                  child: _buildFeatureCard(
+                    icon: Icons.menu_book,
+                    title: "Learn",
+                    onTap: () {
+                      // TODO: Implement learn feature
+                    },
                   ),
                 ),
               ],
@@ -73,12 +73,7 @@ class HomePage extends StatelessWidget {
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (_) => const HomePage()),
-                  );
-                },
+                onPressed: () => Navigator.pushNamed(context, '/prediction'),
                 child: const Text("Mulai Prediksi"),
               ),
             ),
@@ -88,15 +83,43 @@ class HomePage extends StatelessWidget {
     );
   }
 
+  Widget _buildFeatureCard({
+    required IconData icon,
+    required String title,
+    required VoidCallback onTap,
+  }) {
+    return Card(
+      elevation: 2,
+      child: InkWell(
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            children: [
+              Icon(icon, size: 40),
+              const SizedBox(height: 8),
+              Text(title),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget _buildBottomNav(int selectedIndex, BuildContext context) {
     return BottomNavigationBar(
       currentIndex: selectedIndex,
       onTap: (index) {
-        // Tambahkan navigasi antar halaman jika perlu
+        if (index == 1) {
+          Navigator.pushNamed(context, '/prediction');
+        }
       },
       items: const [
         BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
-        BottomNavigationBarItem(icon: Icon(Icons.analytics), label: "Prediction"),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.analytics),
+          label: "Prediction",
+        ),
         BottomNavigationBarItem(icon: Icon(Icons.person), label: "Account"),
       ],
     );
